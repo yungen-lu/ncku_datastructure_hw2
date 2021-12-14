@@ -104,8 +104,22 @@ int main() {
   menu.loop();
 }
 
-// `printInvalidOptionError` and `parseMultipleInput` are utilty functions that will be used in multple places
+// `printInvalidOptionError` ,`handleCinError` and `parseMultipleInput` are utilty functions that will be used in
+// multple places
+
+/**
+ * print error messeg to stderr
+ */
 void printInvalidOptionError() { std::cerr << "Invalid input, please enter valid value" << std::endl; }
+/**
+ * clear stdin after error and throw a error
+ * @throws throw error when this function is called
+ */
+void handleCinError() {
+  std::cin.clear();
+  std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+  throw std::invalid_argument("entered invalid input");
+}
 /**
  * get multiple inputs(int) through stdin and convert them to a vector
  * @return a vector of int
@@ -122,9 +136,7 @@ std::vector<int> parseMultipleInput() {
     if (!std::cin.fail()) {
       vectorOfInt.push_back(number);
     } else {  // if user enter a invalid value e.g "a b" or "1.1 2.2" clear the input buffer
-      std::cin.clear();
-      std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-      throw std::invalid_argument("entered invalid input");
+      handleCinError();
       continue;
     }
   }
@@ -388,7 +400,8 @@ char mainMenu::getUserInput() {
   char input;
   std::cin >> input;
   if (std::cin.fail()) {
-    throw std::invalid_argument("entered invalid input");
+    // throw std::invalid_argument("entered invalid input");
+    handleCinError();
   }
   return input;
 }
@@ -518,7 +531,8 @@ char partOne::getUserInput() {
   char input;
   std::cin >> input;
   if (std::cin.fail()) {
-    throw std::invalid_argument("entered invalid input");
+    // throw std::invalid_argument("entered invalid input");
+    handleCinError();
   }
   return input;
 }
@@ -576,7 +590,8 @@ void FileIO::getFileName() {
   std::cout << "Please input the map file: ";
   std::cin >> fileName;
   if (std::cin.fail()) {
-    throw std::invalid_argument("entered invalid input");
+    // throw std::invalid_argument("entered invalid input");
+    handleCinError();
   }
 }
 /**
