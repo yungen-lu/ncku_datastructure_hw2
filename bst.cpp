@@ -18,6 +18,8 @@ struct TreeNode {
 };
 class BST {
  public:
+  enum printType { prefix, infix, postfix, level };
+
   BST() : root(nullptr){};
   BST(int x) { root = new TreeNode(x); };
   bool InsertNumber(int number);
@@ -27,7 +29,6 @@ class BST {
   TreeNode *getRoot() { return root; }
 
  private:
-  enum printType { prefix, infix, postfix, level };
   TreeNode *root;
   bool deleted;
 
@@ -37,29 +38,32 @@ class BST {
   void printTree(TreeNode *nodeRoot, printType type);
   void levelPrint();
 };
+
 class mainMenu {
- private:
+ public:
   enum mainMenuOptions { first, second, zero, error };
 
- public:
-  char input;
   int loop();
   void display();
   char getUserInput();
   mainMenuOptions parseUserInput();
+
+ private:
+  char input;
 };
 class partOne {
- private:
-  enum partOneOptions { I, D, S, P, R, error };
-  char input;
-  BST partOneBst;
-
  public:
+  enum partOneOptions { I, D, S, P, R, error };
+
   partOne() : partOneBst(BST()) {}
   int loop();
   void display();
   void getUserInput();
   partOneOptions parseUserInput();
+
+ private:
+  char input;
+  BST partOneBst;
 };
 class FileIO {
  public:
@@ -91,6 +95,7 @@ class partTwo {
   int trapIndex;
   std::stack<TreeNode *> stackOfTreeNodePtr;
   std::vector<int> vectorOfPath;
+
   void createBst(std::vector<int> vectorOfInt);
   void getSwordLocation();
   void getMeatyLocation();
