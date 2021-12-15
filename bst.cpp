@@ -9,20 +9,20 @@
 #include <stdexcept>
 #include <string>
 #include <vector>
-struct TreeNode {
-  int value;
-  TreeNode *left;
-  TreeNode *right;
-  TreeNode() : value(0), left(nullptr), right(nullptr) {}
-  TreeNode(int x) : value(x), left(nullptr), right(nullptr) {}
+class TreeNode {
+ public:
+  int value = 0;
+  TreeNode *left = nullptr;
+  TreeNode *right = nullptr;
+  TreeNode() {}
+  TreeNode(int x) : value(x) {}
   TreeNode(int x, TreeNode *left, TreeNode *right) : value(x), left(left), right(right) {}
 };
 class BST {
  public:
   enum printType { prefix, infix, postfix, level };
 
-  BST() : root(nullptr), deleted(false){};
-  BST(int x) { root = new TreeNode(x); };
+  BST(){};
   void InsertNumber(int number);
   void DeleteNumber(int targetValue);
   void SearchNumber(int targetValue);
@@ -30,8 +30,8 @@ class BST {
   TreeNode *getRoot() { return root; }
 
  private:
-  TreeNode *root;
-  bool deleted;
+  TreeNode *root = nullptr;
+  bool deleted = false;
 
   TreeNode *deleteNode(TreeNode *nodeRoot, int targetValue);
   TreeNode *searchNode(TreeNode *nodeRoot, int targetValue);
@@ -45,22 +45,22 @@ class mainMenu {
   enum mainMenuOptions { first, second, zero, error };
 
   int loop();
-  void display();
-  char getUserInput();
-  mainMenuOptions parseUserInput(char input);
+  void display() const;
+  char getUserInput() const;
+  mainMenuOptions parseUserInput(char input) const;
 };
 class partOne {
  public:
   enum partOneOptions { I, D, S, P, R, error };
 
-  partOne() : partOneBst(BST()) {}  // construct our BST in init
+  partOne() {}  // construct our BST in init
   int loop();
-  void display();
-  char getUserInput();
-  partOneOptions parseUserInput(char input);
+  void display() const;
+  char getUserInput() const;
+  partOneOptions parseUserInput(char input) const;
 
  private:
-  BST partOneBst;
+  BST partOneBst = BST();
 };
 class FileIO {
  public:
@@ -78,40 +78,41 @@ class FileIO {
 
 class partTwo {
  public:
-  partTwo() : partTwoBst(BST()) {}  // construct our BST in init
+  partTwo() {}  // construct our BST in init
   void findMeaty();
 
  private:
-  BST partTwoBst;
+  BST partTwoBst = BST();
   int swordLocation;
   int meatyLocation;
   int trapIndex;
   std::stack<TreeNode *> stackOfTreeNodePtr;
   std::vector<int> vectorOfPath;
 
-  void createBst(std::vector<int> vectorOfInt);
+  void createBst(std::vector<int> &vectorOfInt);
   void getSwordLocation();
   void getMeatyLocation();
   void getTrapIndex();
   std::vector<int> findNodesToDelete();
-  void traversBstInPostOrder(TreeNode *nodeRoot, std::string target, std::vector<int> &targetNodesValues);
+  void traversBstInPostOrder(TreeNode *nodeRoot, std::string &target, std::vector<int> &targetNodesValues);
   void findPathToSword(TreeNode *nodeRoot, bool diff);
   TreeNode *findNearestAnc(TreeNode *initNode);
   void findPathToMeaty(TreeNode *nodeRoot);
   void displayShortestPath();
 };
 int main() {
-  mainMenu menu = mainMenu();
+  auto menu = mainMenu();
   menu.loop();
 }
 
-// `printInvalidOptionError` ,`handleCinError` and `parseMultipleInput` are utilty functions that will be used in
-// multple places
+// `printInvalidOptionError`, `handleExceptionError`, `handleCinError` and `parseMultipleInput` are utilty functions
+// that will be used in multple places
 
 /**
  * print error messeg to stderr
  */
 void printInvalidOptionError() { std::cerr << "Invalid input, please enter valid value" << std::endl; }
+void handleExceptionError(const std::invalid_argument &e) { std::cerr << e.what() << std::endl; }
 /**
  * clear stdin after error and throw a error
  * @throws throw error when this function is called
@@ -119,7 +120,7 @@ void printInvalidOptionError() { std::cerr << "Invalid input, please enter valid
 void handleCinError() {
   std::cin.clear();
   std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-  throw std::invalid_argument("entered invalid input");
+  throw std::invalid_argument("Invalid input, please enter valid value");
 }
 /**
  * get multiple inputs(int) through stdin and convert them to a vector
@@ -150,13 +151,7 @@ std::vector<int> parseMultipleInput() {
  * @param number the value to insert
  * @throws catch error when insert `number` already exists and throw it to outer scope
  */
-void BST::InsertNumber(int number) {
-  try {
-    root = insertNode(root, number);
-  } catch (const std::invalid_argument &e) {
-    throw;
-  }
-}
+void BST::InsertNumber(int number) { root = insertNode(root, number); }
 /**
  * delete node that contain `targetValue` from BST
  * @param targetValue the value that we want to delete
@@ -284,7 +279,7 @@ TreeNode *BST::searchNode(TreeNode *nodeRoot, int targetValue) {
  */
 TreeNode *BST::insertNode(TreeNode *nodeRoot, int number) {
   if (nodeRoot == nullptr) {
-    TreeNode *newNode = new TreeNode(number);
+    auto *newNode = new TreeNode(number);
     return newNode;
   }
   if (number == nodeRoot->value) {
@@ -348,33 +343,34 @@ void BST::levelPrint() {
  * @return return 0 when user exit the program
  */
 int mainMenu::loop() {
-  while (1) {
+  while (true) {
     char input;
     display();
     try {
       input = getUserInput();
-    } catch (std::invalid_argument &e) {
-      // std::cerr << e.what() << std::endl;
-      printInvalidOptionError();
+    } catch (const std::invalid_argument &e) {
+      handleExceptionError(e);
       continue;
     }
     switch (parseUserInput(input)) {
       case first: {
-        partOne partone = partOne();
+        auto partone = partOne();
         partone.loop();
         break;
       }
       case second: {
-        partTwo parttwo = partTwo();
+        auto parttwo = partTwo();
         parttwo.findMeaty();
         break;
       }
-      case zero: {
+      case zero:
         return 0;
-      }
+
       case error: {
         printInvalidOptionError();
         break;
+        default:
+          printInvalidOptionError();
       }
     }
   }
@@ -382,7 +378,7 @@ int mainMenu::loop() {
 /**
  * output the main menu context to stdout
  */
-void mainMenu::display() {
+void mainMenu::display() const {
   std::cout << "(1)Binary searching Tree." << std::endl;
   std::cout << "(2)Finding Meaty." << std::endl;
   std::cout << "(0)Escape and face to music next year." << std::endl;
@@ -392,11 +388,10 @@ void mainMenu::display() {
  * @throw throw error when user enter invalid input
  * @return return input
  */
-char mainMenu::getUserInput() {
+char mainMenu::getUserInput() const {
   char input;
   std::cin >> input;
   if (std::cin.fail()) {
-    // throw std::invalid_argument("entered invalid input");
     handleCinError();
   }
   return input;
@@ -406,7 +401,7 @@ char mainMenu::getUserInput() {
  *@param parse target
  * @return enum value according to parse result
  */
-mainMenu::mainMenuOptions mainMenu::parseUserInput(char input) {
+mainMenu::mainMenuOptions mainMenu::parseUserInput(char input) const {
   switch (input) {
     case '1':
       return first;
@@ -425,12 +420,13 @@ mainMenu::mainMenuOptions mainMenu::parseUserInput(char input) {
  * @return return 0 when user exit the program
  */
 int partOne::loop() {
-  while (1) {
+  while (true) {
     display();
     char input;
     try {
       input = getUserInput();
-    } catch (std::invalid_argument &e) {
+    } catch (const std::invalid_argument &e) {
+      handleExceptionError(e);
       return 0;
     }
     switch (parseUserInput(input)) {
@@ -440,14 +436,14 @@ int partOne::loop() {
         try {
           vectorOfInt = parseMultipleInput();
         } catch (std::invalid_argument &e) {
-          printInvalidOptionError();
+          handleExceptionError(e);
           continue;
         }
         for (int i : vectorOfInt) {
           try {
             partOneBst.InsertNumber(i);
           } catch (std::invalid_argument &e) {
-            std::cerr << e.what() << std::endl;
+            handleExceptionError(e);
             continue;
           }
           std::cout << "Number " << i << " is inserted." << std::endl;
@@ -460,14 +456,14 @@ int partOne::loop() {
         try {
           vectorOfInt = parseMultipleInput();
         } catch (std::invalid_argument &e) {
-          printInvalidOptionError();
+          handleExceptionError(e);
           continue;
         }
         for (int i : vectorOfInt) {
           try {
             partOneBst.DeleteNumber(i);
           } catch (std::invalid_argument &e) {
-            std::cerr << e.what() << std::endl;
+            handleExceptionError(e);
             continue;
           }
           std::cout << "Number " << i << " is deleted." << std::endl;
@@ -480,14 +476,14 @@ int partOne::loop() {
         try {
           vectorOfInt = parseMultipleInput();
         } catch (std::invalid_argument &e) {
-          printInvalidOptionError();
+          handleExceptionError(e);
           continue;
         }
         for (int i : vectorOfInt) {
           try {
             partOneBst.SearchNumber(i);
           } catch (std::invalid_argument &e) {
-            std::cerr << e.what() << std::endl;
+            handleExceptionError(e);
             continue;
           }
           std::cout << "Bingo! " << i << " is found." << std::endl;
@@ -502,16 +498,18 @@ int partOne::loop() {
         printInvalidOptionError();
         break;
       }
-      case R: {
+      case R:
         return 0;
-      }
+
+      default:
+        printInvalidOptionError();
     }
   }
 }
 /**
  * output the partone menu context to stdout
  */
-void partOne::display() {
+void partOne::display() const {
   std::cout << "(I)nsert a number." << std::endl;
   std::cout << "(D)elete a number." << std::endl;
   std::cout << "(S)earch a number." << std::endl;
@@ -523,11 +521,10 @@ void partOne::display() {
  * @throw throw error when user enter invalid input
  * @return return input
  */
-char partOne::getUserInput() {
+char partOne::getUserInput() const {
   char input;
   std::cin >> input;
   if (std::cin.fail()) {
-    // throw std::invalid_argument("entered invalid input");
     handleCinError();
   }
   return input;
@@ -537,7 +534,7 @@ char partOne::getUserInput() {
  * @param parse target
  * @return enum value according to parse result
  */
-partOne::partOneOptions partOne::parseUserInput(char input) {
+partOne::partOneOptions partOne::parseUserInput(char input) const {
   switch (static_cast<char>(std::toupper(static_cast<unsigned char>(input)))) {
     case 'I':
       return I;
@@ -586,7 +583,6 @@ void FileIO::getFileName() {
   std::cout << "Please input the map file: ";
   std::cin >> fileName;
   if (std::cin.fail()) {
-    // throw std::invalid_argument("entered invalid input");
     handleCinError();
   }
 }
@@ -605,7 +601,7 @@ void FileIO::convertFileBufferToVector() {
  * the main function for finding meaty, which follow the order of openfile -> create BST -> get user input -> find meaty
  */
 void partTwo::findMeaty() {
-  FileIO file = FileIO();
+  auto file = FileIO();
   file.openAndConvert();
   createBst(file.vectorOfInt);
   getSwordLocation();
@@ -617,7 +613,7 @@ void partTwo::findMeaty() {
     try {
       partTwoBst.DeleteNumber(i);
     } catch (std::invalid_argument &e) {
-      std::cerr << e.what() << std::endl;
+      handleExceptionError(e);
       continue;
     }
     std::cout << "Number " << i << " is deleted." << std::endl;
@@ -625,7 +621,7 @@ void partTwo::findMeaty() {
   std::cout << std::endl;
   try {
     findPathToSword(partTwoBst.getRoot(), false);
-  } catch (std::exception &e) {
+  } catch (std::logic_error &e) {
     std::cout << e.what() << std::endl;
     return;
   }
@@ -638,7 +634,7 @@ void partTwo::findMeaty() {
  * create a BST with vector `vectorOfInt`
  * @param vectorOfInt the vector that we want to convert to BST
  */
-void partTwo::createBst(std::vector<int> vectorOfInt) {
+void partTwo::createBst(std::vector<int> &vectorOfInt) {
   for (int i : vectorOfInt) {
     partTwoBst.InsertNumber(i);
   }
@@ -682,7 +678,7 @@ std::vector<int> partTwo::findNodesToDelete() {
  * @param target the target string we want to find in node
  * @targetNodesValues the vector we want to push back when we find match
  */
-void partTwo::traversBstInPostOrder(TreeNode *nodeRoot, std::string target, std::vector<int> &targetNodesValues) {
+void partTwo::traversBstInPostOrder(TreeNode *nodeRoot, std::string &target, std::vector<int> &targetNodesValues) {
   if (nodeRoot == nullptr) {
     return;
   }
