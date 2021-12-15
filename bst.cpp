@@ -67,7 +67,7 @@ class FileIO {
   std::vector<int> vectorOfInt;
   std::string fileName;
   std::ifstream fileBuffer;
-  FileIO() { getFileName(); }  // try to get the filename at initialization
+  FileIO() noexcept { getFileName(); }  // try to get the filename at initialization
 
   void openAndConvert();
 
@@ -78,7 +78,7 @@ class FileIO {
 
 class partTwo {
  public:
-  partTwo() = default;  // construct our BST in init
+  partTwo() noexcept = default;  // construct our BST in init
   void findMeaty();
 
  private:
@@ -621,7 +621,7 @@ void partTwo::findMeaty() {
   std::cout << std::endl;
   try {
     findPathToSword(partTwoBst.getRoot(), false);
-  } catch (std::logic_error &e) {
+  } catch (const std::logic_error &e) {
     std::cout << e.what() << std::endl;
     return;
   }
