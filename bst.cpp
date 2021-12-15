@@ -22,7 +22,6 @@ class BST {
  public:
   enum printType { prefix, infix, postfix, level };
 
-  BST() = default;
   void InsertNumber(int number);
   void DeleteNumber(int targetValue);
   void SearchNumber(int targetValue);
@@ -53,36 +52,33 @@ class partOne {
  public:
   enum partOneOptions { I, D, S, P, R, error };
 
-  partOne() = default;  // construct our BST in init
   int loop();
   void display() const;
   char getUserInput() const;
   partOneOptions parseUserInput(char input) const;
 
  private:
-  BST partOneBst = BST();
+  BST partOneBst;
 };
 class FileIO {
  public:
   std::vector<int> vectorOfInt;
   std::string fileName;
   std::ifstream fileBuffer;
-  FileIO() noexcept { getFileName(); }  // try to get the filename at initialization
 
+  void getFileName();
   void openAndConvert();
 
  private:
-  void getFileName();
   void convertFileBufferToVector();
 };
 
 class partTwo {
  public:
-  partTwo() noexcept = default;  // construct our BST in init
   void findMeaty();
 
  private:
-  BST partTwoBst = BST();
+  BST partTwoBst;
   int swordLocation;
   int meatyLocation;
   int trapIndex;
@@ -354,12 +350,12 @@ int mainMenu::loop() const {
     }
     switch (parseUserInput(input)) {
       case first: {
-        auto partone = partOne();
+        partOne partone;
         partone.loop();
         break;
       }
       case second: {
-        auto parttwo = partTwo();
+        partTwo parttwo;
         parttwo.findMeaty();
         break;
       }
@@ -601,7 +597,8 @@ void FileIO::convertFileBufferToVector() {
  * the main function for finding meaty, which follow the order of openfile -> create BST -> get user input -> find meaty
  */
 void partTwo::findMeaty() {
-  auto file = FileIO();
+  FileIO file;
+  file.getFileName();
   file.openAndConvert();
   createBst(file.vectorOfInt);
   getSwordLocation();
