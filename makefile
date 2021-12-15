@@ -1,5 +1,5 @@
 main: bst.cpp
-	g++ -O2 -std=gnu++11 -pedantic bst.cpp -o rat
+	g++ -O2 -std=gnu++11 -pedantic bst.cpp -o bst
 clean:
 	rm -rf bst
 cleanDebugFiles:
