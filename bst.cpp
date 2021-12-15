@@ -97,7 +97,7 @@ class partTwo {
   void displayShortestPath();
 };
 int main() {
-  auto menu = mainMenu();
+  mainMenu menu;
   menu.loop();
 }
 
