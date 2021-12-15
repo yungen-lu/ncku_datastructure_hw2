@@ -93,7 +93,8 @@ class partTwo {
   void getSwordLocation();
   void getMeatyLocation();
   void getTrapIndex();
-  std::vector<int> findNodesToDelete(std::vector<int> vectorOfInt);
+  std::vector<int> findNodesToDelete();
+  void traversBstInPostOrder(TreeNode *nodeRoot, std::string target, std::vector<int> &targetNodesValues);
   void findPathToSword(TreeNode *nodeRoot, bool diff);
   TreeNode *findNearestAnc(TreeNode *initNode);
   void findPathToMeaty(TreeNode *nodeRoot);
@@ -615,7 +616,7 @@ void partTwo::findMeaty() {
   getSwordLocation();
   getMeatyLocation();
   getTrapIndex();
-  std::vector<int> targetDeleteValue = findNodesToDelete(file.vectorOfInt);
+  std::vector<int> targetDeleteValue = findNodesToDelete();
   std::cout << std::endl;
   for (int i : targetDeleteValue) {
     try {
@@ -674,17 +675,30 @@ void partTwo::getTrapIndex() {
  * @param vectorOfInt the vector that contain all node values
  * @return a vector that contains all the nodes that fullfill the requirement of trapIndex
  */
-std::vector<int> partTwo::findNodesToDelete(std::vector<int> vectorOfInt) {
+std::vector<int> partTwo::findNodesToDelete() {
   std::vector<int> targetNodesValues;
   std::string target = std::to_string(trapIndex);
-  for (int i : vectorOfInt) {
-    std::string j = std::to_string(i);
-    if (j.find(target) != std::string::npos) {
-      targetNodesValues.push_back(i);
-    }
-  }
+  traversBstInPostOrder(partTwoBst.getRoot(), target, targetNodesValues);
   return targetNodesValues;
 }
+/**
+ * travers through the BST in postorder and push back node value to `targetNodesValues` vector when we find a match
+ * @param nodeRoot the root of tree in the current function call
+ * @param target the target string we want to find in node
+ * @targetNodesValues the vector we want to push back when we find match
+ */
+void partTwo::traversBstInPostOrder(TreeNode *nodeRoot, std::string target, std::vector<int> &targetNodesValues) {
+  if (nodeRoot == nullptr) {
+    return;
+  }
+  traversBstInPostOrder(nodeRoot->left, target, targetNodesValues);
+  traversBstInPostOrder(nodeRoot->right, target, targetNodesValues);
+  if (std::to_string(nodeRoot->value).find(target) != std::string::npos) {
+    targetNodesValues.push_back(nodeRoot->value);
+  }
+  return;
+}
+
 /**
  * find the path to sword location according to the rule of BST, during the process, do things as listed 1. push node
  * pointer to `vectorOfPath` when visiting a new node. 2. check whether th path to sword location and meaty location
