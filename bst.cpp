@@ -14,15 +14,15 @@ class TreeNode {
   int value = 0;
   TreeNode *left = nullptr;
   TreeNode *right = nullptr;
-  TreeNode() {}
-  TreeNode(int x) : value(x) {}
+  TreeNode() = default;
+  explicit TreeNode(int x) : value(x) {}
   TreeNode(int x, TreeNode *left, TreeNode *right) : value(x), left(left), right(right) {}
 };
 class BST {
  public:
   enum printType { prefix, infix, postfix, level };
 
-  BST(){};
+  BST() = default;
   void InsertNumber(int number);
   void DeleteNumber(int targetValue);
   void SearchNumber(int targetValue);
@@ -44,7 +44,7 @@ class mainMenu {
  public:
   enum mainMenuOptions { first, second, zero, error };
 
-  int loop();
+  int loop() const;
   void display() const;
   char getUserInput() const;
   mainMenuOptions parseUserInput(char input) const;
@@ -53,7 +53,7 @@ class partOne {
  public:
   enum partOneOptions { I, D, S, P, R, error };
 
-  partOne() {}  // construct our BST in init
+  partOne() = default;  // construct our BST in init
   int loop();
   void display() const;
   char getUserInput() const;
@@ -78,7 +78,7 @@ class FileIO {
 
 class partTwo {
  public:
-  partTwo() {}  // construct our BST in init
+  partTwo() = default;  // construct our BST in init
   void findMeaty();
 
  private:
@@ -89,7 +89,7 @@ class partTwo {
   std::stack<TreeNode *> stackOfTreeNodePtr;
   std::vector<int> vectorOfPath;
 
-  void createBst(std::vector<int> &vectorOfInt);
+  void createBst(const std::vector<int> &vectorOfInt);
   void getSwordLocation();
   void getMeatyLocation();
   void getTrapIndex();
@@ -342,7 +342,7 @@ void BST::levelPrint() {
  * a loop that loop through output -> userinput -> parseuserinput -> excute functions
  * @return return 0 when user exit the program
  */
-int mainMenu::loop() {
+int mainMenu::loop() const {
   while (true) {
     char input;
     display();
@@ -369,9 +369,9 @@ int mainMenu::loop() {
       case error: {
         printInvalidOptionError();
         break;
-        default:
-          printInvalidOptionError();
       }
+      default:
+        printInvalidOptionError();
     }
   }
 }
@@ -435,14 +435,14 @@ int partOne::loop() {
         std::vector<int> vectorOfInt;
         try {
           vectorOfInt = parseMultipleInput();
-        } catch (std::invalid_argument &e) {
+        } catch (const std::invalid_argument &e) {
           handleExceptionError(e);
           continue;
         }
         for (int i : vectorOfInt) {
           try {
             partOneBst.InsertNumber(i);
-          } catch (std::invalid_argument &e) {
+          } catch (const std::invalid_argument &e) {
             handleExceptionError(e);
             continue;
           }
@@ -455,14 +455,14 @@ int partOne::loop() {
         std::vector<int> vectorOfInt;
         try {
           vectorOfInt = parseMultipleInput();
-        } catch (std::invalid_argument &e) {
+        } catch (const std::invalid_argument &e) {
           handleExceptionError(e);
           continue;
         }
         for (int i : vectorOfInt) {
           try {
             partOneBst.DeleteNumber(i);
-          } catch (std::invalid_argument &e) {
+          } catch (const std::invalid_argument &e) {
             handleExceptionError(e);
             continue;
           }
@@ -475,14 +475,14 @@ int partOne::loop() {
         std::vector<int> vectorOfInt;
         try {
           vectorOfInt = parseMultipleInput();
-        } catch (std::invalid_argument &e) {
+        } catch (const std::invalid_argument &e) {
           handleExceptionError(e);
           continue;
         }
         for (int i : vectorOfInt) {
           try {
             partOneBst.SearchNumber(i);
-          } catch (std::invalid_argument &e) {
+          } catch (const std::invalid_argument &e) {
             handleExceptionError(e);
             continue;
           }
@@ -612,7 +612,7 @@ void partTwo::findMeaty() {
   for (int i : targetDeleteValue) {
     try {
       partTwoBst.DeleteNumber(i);
-    } catch (std::invalid_argument &e) {
+    } catch (const std::invalid_argument &e) {
       handleExceptionError(e);
       continue;
     }
@@ -634,7 +634,7 @@ void partTwo::findMeaty() {
  * create a BST with vector `vectorOfInt`
  * @param vectorOfInt the vector that we want to convert to BST
  */
-void partTwo::createBst(std::vector<int> &vectorOfInt) {
+void partTwo::createBst(const std::vector<int> &vectorOfInt) {
   for (int i : vectorOfInt) {
     partTwoBst.InsertNumber(i);
   }
