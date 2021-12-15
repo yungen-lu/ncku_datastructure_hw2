@@ -21,11 +21,11 @@ class BST {
  public:
   enum printType { prefix, infix, postfix, level };
 
-  BST() : root(nullptr){};
+  BST() : root(nullptr), deleted(false){};
   BST(int x) { root = new TreeNode(x); };
-  bool InsertNumber(int number);
-  bool DeleteNumber(int targetValue);
-  bool SearchNumber(int targetValue);
+  void InsertNumber(int number);
+  void DeleteNumber(int targetValue);
+  void SearchNumber(int targetValue);
   void PrintALL();
   TreeNode *getRoot() { return root; }
 
@@ -149,16 +149,13 @@ std::vector<int> parseMultipleInput() {
  * insert node with value `number` to BST
  * @param number the value to insert
  * @throws catch error when insert `number` already exists and throw it to outer scope
- * @return return true when insert is success, false when fail
  */
-bool BST::InsertNumber(int number) {
+void BST::InsertNumber(int number) {
   try {
     root = insertNode(root, number);
   } catch (const std::invalid_argument &e) {
     throw;
-    return false;
   }
-  return true;
 }
 /**
  * delete node that contain `targetValue` from BST
@@ -166,7 +163,7 @@ bool BST::InsertNumber(int number) {
  * @throws throw error when node with value `targetValue` does not exist
  * @return true when delete is success, false when fail
  */
-bool BST::DeleteNumber(int targetValue) {
+void BST::DeleteNumber(int targetValue) {
   deleted = false;
   root = deleteNode(root, targetValue);
   if (deleted == false) {
@@ -174,7 +171,6 @@ bool BST::DeleteNumber(int targetValue) {
     errorString = "Number " + std::to_string(targetValue) + " is not exists.";
     throw std::invalid_argument(errorString);
   }
-  return deleted;
 }
 
 /**
@@ -183,14 +179,13 @@ bool BST::DeleteNumber(int targetValue) {
  * @throws throw error when node with value `targetValue` does not exist
  * @return true when search is success, false when fail
  */
-bool BST::SearchNumber(int targetValue) {
+void BST::SearchNumber(int targetValue) {
   bool result = searchNode(root, targetValue);
   if (result == false) {
     std::string errorString;
     errorString = "SORRY. " + std::to_string(targetValue) + " is not found.";
     throw std::invalid_argument(errorString);
   }
-  return result;
 }
 /**
  * print BST in prefix, infix, post, level, order
