@@ -98,7 +98,14 @@ class partTwo {
 };
 int main() {
   mainMenu menu;
-  menu.loop();
+  std::cin.exceptions(std::ios_base::eofbit);
+  try {
+    menu.loop();
+  } catch (const std::ios_base::failure &e) {
+    std::cout << e.what() << std::endl;
+    return 1;
+  }
+  return 0;
 }
 
 // `printInvalidOptionError`, `handleExceptionError`, `handleCinError` and `parseMultipleInput` are utilty functions
@@ -388,6 +395,8 @@ char mainMenu::getUserInput() const {
   char input;
   std::cin >> input;
   if (std::cin.fail()) {
+    if (std::cin.eof()) {
+    }
     handleCinError();
   }
   return input;
