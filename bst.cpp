@@ -159,7 +159,7 @@ void BST::DeleteNumber(int targetValue) {
   root = deleteNode(root, targetValue);
   if (deleted == false) {
     std::string errorString;
-    errorString = "Number " + std::to_string(targetValue) + " is not exists.";
+    errorString = "Number " + std::to_string(targetValue) + " is not exist.";
     throw std::invalid_argument(errorString);
   }
 }
