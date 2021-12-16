@@ -19,6 +19,8 @@
 
 <img src="asset/screenshot2.png" alt="截圖 2021-10-21 下午1.10.19" style="zoom: 33%;" />
 
+若使用Dev-C++ 運行的話需要在 Tools->Compiler Options->Settings->Code generation->Language standard (-std) 中選擇 GNU C++11 或 ISO C++11 才可正確編譯
+
 #### delete node 的方法
 
 在 delete node 時，主要會有五種情況
@@ -34,3 +36,17 @@
 1. 最小 node 為右子樹的 leaf：將最小 node 的位址取代被刪除 node 位址並刪除 node
 2. 最小 node 有右子樹且最小 node 的 parent 不是被刪除 node：將最小 node 的位址取代被刪除 node 位址，並將最小 node 的右子樹連接到原本最小 node 的 parent
 3. 最小 node 有右子樹且最小 node 的 parent 是被刪除 node（最小 node 為右子樹 root）：將最小 node 的位址取代被刪除 node 位址並刪除 node
+
+#### 遇到的問題
+
+在 Dev C++ compile 測試的時候發現會有 ifstream implicitly deleted 的問題
+
+#### 解決方法
+
+在 Dev C++ 中 streams 無 swap and move operations ，將程式改成以下即可
+
+```c++
+auto file = FileIO(); // bad
+FileIO file; //good
+```
+
