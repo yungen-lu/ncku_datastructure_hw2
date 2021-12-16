@@ -204,7 +204,7 @@ void BST::PrintALL() {
 }
 // private methods
 /**
- * delete node that contains `targetValue`
+ * delete node that contains `targetValue` for more detailed explanation please read the README file
  * @param nodeRoot the root of tree in the current function call
  * @param targetValue the value that we want to delete
  * @return  the new root of the current node
@@ -395,8 +395,6 @@ char mainMenu::getUserInput() const {
   char input;
   std::cin >> input;
   if (std::cin.fail()) {
-    if (std::cin.eof()) {
-    }
     handleCinError();
   }
   return input;
@@ -610,9 +608,14 @@ void partTwo::findMeaty() {
   file.getFileName();
   file.openAndConvert();
   createBst(file.vectorOfInt);
-  getSwordLocation();
-  getMeatyLocation();
-  getTrapIndex();
+  try {
+    getSwordLocation();
+    getMeatyLocation();
+    getTrapIndex();
+  } catch (const std::invalid_argument &e) {
+    handleExceptionError(e);
+    return;
+  }
   std::vector<int> targetDeleteValue = findNodesToDelete();
   std::cout << std::endl;
   for (int i : targetDeleteValue) {
@@ -651,6 +654,9 @@ void partTwo::createBst(const std::vector<int> &vectorOfInt) {
 void partTwo::getSwordLocation() {
   std::cout << "Please input the sword location: ";
   std::cin >> swordLocation;
+  if (std::cin.fail()) {
+    handleCinError();
+  }
 }
 /**
  * get meaty location through stdin
@@ -658,6 +664,9 @@ void partTwo::getSwordLocation() {
 void partTwo::getMeatyLocation() {
   std::cout << "Please input the Meaty's location: ";
   std::cin >> meatyLocation;
+  if (std::cin.fail()) {
+    handleCinError();
+  }
 }
 /**
  * get trap location through stdin
@@ -665,6 +674,13 @@ void partTwo::getMeatyLocation() {
 void partTwo::getTrapIndex() {
   std::cout << "Please input the broccoli traps' index (0~9): ";
   std::cin >> trapIndex;
+  if (std::cin.fail()) {
+    handleCinError();
+  }
+  if (trapIndex > 9 || trapIndex < 0) {
+    std::cerr << "Please enter valid number(0~9)" << std::endl;
+    getTrapIndex();
+  }
 }
 /**
  * since we want to delete all node that contain `trapIndex` we turn all node values to string and check if `trapIndex`
