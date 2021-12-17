@@ -442,7 +442,7 @@ int partOne::loop() {
           handleExceptionError(e);
           continue;
         }
-        for (int i : vectorOfInt) {
+        for (const auto &i : vectorOfInt) {
           try {
             partOneBst.InsertNumber(i);
           } catch (const std::invalid_argument &e) {
@@ -462,7 +462,7 @@ int partOne::loop() {
           handleExceptionError(e);
           continue;
         }
-        for (int i : vectorOfInt) {
+        for (const auto &i : vectorOfInt) {
           try {
             partOneBst.DeleteNumber(i);
           } catch (const std::invalid_argument &e) {
@@ -482,7 +482,7 @@ int partOne::loop() {
           handleExceptionError(e);
           continue;
         }
-        for (int i : vectorOfInt) {
+        for (const auto &i : vectorOfInt) {
           try {
             partOneBst.SearchNumber(i);
           } catch (const std::invalid_argument &e) {
@@ -618,7 +618,7 @@ void partTwo::findMeaty() {
   }
   std::vector<int> targetDeleteValue = findNodesToDelete();
   std::cout << std::endl;
-  for (int i : targetDeleteValue) {
+  for (const auto &i : targetDeleteValue) {
     try {
       partTwoBst.DeleteNumber(i);
     } catch (const std::invalid_argument &e) {
@@ -644,7 +644,7 @@ void partTwo::findMeaty() {
  * @param vectorOfInt the vector that we want to convert to BST
  */
 void partTwo::createBst(const std::vector<int> &vectorOfInt) {
-  for (int i : vectorOfInt) {
+  for (const auto &i : vectorOfInt) {
     partTwoBst.InsertNumber(i);
   }
 }

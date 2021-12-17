@@ -15,7 +15,7 @@
 
 <img src="asset/screenshot1.png" alt="截圖 2021-10-21 下午12.58.40" style="zoom: 33%;" />
 
-編譯 argument 為 g++ -O2 -Wall -Wextra -std=gnu++11 -pedantic rat.cpp -o rat
+編譯 argument 為 g++ -O2 -Wall -Wextra -std=gnu++11 -pedantic bst.cpp -o bst
 
 <img src="asset/screenshot2.png" alt="截圖 2021-10-21 下午1.10.19" style="zoom: 33%;" />
 
